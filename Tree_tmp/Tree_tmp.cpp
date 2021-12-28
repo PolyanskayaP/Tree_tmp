@@ -17,7 +17,18 @@ struct node {
 };
 
 int findNode(int value, int k, node* A, int& size) { //возвр индекс вершины-родителя
-    if (size == 1) return -1; //zanuli!!!!   k - index tekus..?
+    //k = k - 1;
+    if (size == 0) {
+        
+     /*   A = (node*)realloc(A, sizeof(node) * (++size));
+        A[k].left_child = -1;
+        A[k].mark = 0; //virtual
+        A[k].name = size + 65;
+        A[k].right_sibling = -1;
+        A[k].znach = -1;
+        A[k].index = size - 1;   */
+        return -1; //zanuli!!!!   k - index tekus..?
+    }
     int indLeft = A[k].left_child;
     if (indLeft == -1) {
         A = (node*)realloc(A, sizeof(node) * (++size));
@@ -53,22 +64,51 @@ int findNode(int value, int k, node* A, int& size) { //возвр индекс �
 }
 
 void add(int value, node* A, int& size) {  //prover' size!
-    int i = size - 1;
-    int indParent = findNode(value, i, A, size); //a  ecli -1????? to est'[0]
+    int i = size; //-1 
+    int indParent = findNode(value, i, A, size); //a  ecli -1????? to est'[0]   
+    if (indParent == -1) {
+        A = (node*)realloc(A, sizeof(node) * (++size));
+        A[i].index = i;
+        A[i].left_child = -1;
+        A[i].mark = 1;
+        A[i].name = i + 65;
+        A[i].right_sibling = -1;
+        A[i].znach = value;
+    }
 
- /*   A = (node*)realloc(A, sizeof(node) * (++size)); //доб. в динамический массив
-    A[i].znach = value;
-    A[i].name = i + 65; //
-    A[i].index = i;
-    A[i].left_child = -1;
-    A[i].mark = 1; //1 - обычн, 0 - виртуальный
-    */
     if (value < A[indParent].znach) { //ya,rod,brat
-        if A[]
-            //suda sozd
+        if (A[A[indParent].left_child].mark == 0) { //virt
+           // A = (node*)realloc(A, sizeof(node) * (++size)); //доб. в динамический массив
+            A[A[indParent].left_child].znach = value;
+            A[A[indParent].left_child].name = i + 65; //
+            A[A[indParent].left_child].index = i;
+            A[A[indParent].left_child].left_child = -1;
+            A[A[indParent].left_child].mark = 1; //1 - обычн, 0 - виртуальный
+
+             
+        }
+        else {
+            A = (node*)realloc(A, sizeof(node) * (++size)); //доб. в динамический массив
+            A[i].znach = value;
+            A[i].name = i + 65; //
+            A[i].index = i;
+            A[i].left_child = -1;
+            A[i].mark = 1; //1 - обычн, 0 - виртуальный
+
+            A[indParent].left_child = i;
+        }
     }
     else
     {
+        //A[indParent].left_child
+        A = (node*)realloc(A, sizeof(node) * (++size)); //доб. в динамический массив
+        A[i].znach = value;
+        A[i].name = i + 65; //
+        A[i].index = i;
+        A[i].left_child = -1;
+        A[i].mark = 1; //1 - обычн, 0 - виртуальный
+
+        A[A[indParent].left_child].right_sibling = i;
 
     }
 }
@@ -85,7 +125,7 @@ int main()
     int sizeA = 0; 
     node* A = 0; 
 
-    int sizeB = 0;
+  /*  int sizeB = 0;
     node* B = 0;
 
     int sizeC = 0;
@@ -109,11 +149,15 @@ int main()
         //cout << B[i].znach << " " << B[i].name << " ";
     }
 
-
- 
+    */
+    for (i = 0; i < v; i++) {
+        
+        add(forA[i], A, sizeA);
+        //cout << A[i].znach << " ";
+    }
 
     free(A);
-    free(B);
+ //   free(B);
     return 0; 
 }
 

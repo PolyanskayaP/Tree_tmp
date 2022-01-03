@@ -61,7 +61,7 @@ void findNode(int value, /**/int k, node* A, /*mojet size*/int& size) { //воз
                 A[A[k].left_child].znach = value;
                 A[A[k].left_child].mark = 1;
 
-                A[k].left_child = A[A[k].left_child].index;
+                A[k].left_child = A[A[k].left_child].index; //mojno ubrat.
             }
     }
     else {
@@ -112,6 +112,36 @@ void findNode(int value, /**/int k, node* A, /*mojet size*/int& size) { //воз
         }
     }
     return;
+}
+
+void obrat_obh(int i, node* A, int* S, int& size) {
+    if (A[i].left_child != -1) {
+        obrat_obh(A[i].left_child, A, S, size);
+        if (A[A[i].left_child].right_sibling != -1)  obrat_obh(A[A[i].left_child].right_sibling, A, S, size);
+    }
+
+    if (A[i].mark == 1) {
+        S[size] = A[i].znach; //dob name
+        size++;
+    }
+}
+
+void sim_obh(int i, node* A, int* S, int& size) {
+    if (A[i].left_child == -1 && A[i].mark == 1) {
+        S[size] = A[i].znach; //dob name
+        size++;
+    }
+    else 
+    if (A[i].mark == 1)
+    {
+        sim_obh(A[i].left_child, A, S, size);
+        if (A[i].mark == 1) {
+            S[size] = A[i].znach; //dob name
+            size++;
+        }
+        if (A[A[i].left_child].right_sibling != -1)
+            sim_obh(A[A[i].left_child].right_sibling, A, S, size);
+    }
 }
 
 /*void add(int value, node* A, int& size) {  //prover' size!
@@ -169,6 +199,8 @@ void findNode(int value, /**/int k, node* A, /*mojet size*/int& size) { //воз
 int main()
 {
     int i, j;
+    int sA[v];
+    int sB[v];
     int forA[v] = { 50,30,60,70,40,20,10 };
     int forB[v] = { 22,99,88,10,11,0,33 };
     int sizeA = 0; 
@@ -198,8 +230,6 @@ int main()
 
     for (i = 0; i < v; i++) {
         findNode(forB[i], 0, B, sizeB);
-        //add(forA[i], A, sizeA); cout <<"size="<< sizeA;
-        //cout <<" "<< A[i].znach << " " << sizeA << " ";
     }
 
     i = 0;
@@ -211,9 +241,21 @@ int main()
         }
         i++;
     }
+    cout << endl;
+    //for (i = 0; i < v; i++) sA[i] = 0;
 
-    //free(A);//
- //   free(B);
+    sizeA = 0;
+    obrat_obh(0, A, sA, sizeA);
+    for (i = 0; i < v; i++)
+        cout << sA[i] << " ";
+
+    cout << endl;
+
+    sizeB = 0;
+    sim_obh(0, B, sB, sizeB); 
+    for (i = 0; i < v; i++)
+        cout << sB[i] << " ";
+
     return 0; 
 }
 
